@@ -21,6 +21,7 @@
 */
 
 import UIKit
+import Alamofire
 
 class DefinitionViewController: UIViewController {
   
@@ -36,6 +37,19 @@ class DefinitionViewController: UIViewController {
     
     title = definition.title
     descriptionLabel.text = definition.description
+
+    if let imageURL = definition.imageURL {
+
+        let request = URLRequest(url: imageURL as URL)
+        Alamofire.request(request).responseData { response in
+            self.activityIndicator.stopAnimating()
+            
+            if let data = response.result.value {
+                let image = UIImage(data: data)
+                self.imageView.image = image
+            }
+        }
+    }
   }
   
   override var preferredStatusBarStyle : UIStatusBarStyle {
